@@ -1,21 +1,30 @@
 # TokenQL
 
-`npm install`
+```bash
+sudo apt update
+sudo apt upgrade
 
-## Generate Code
+sudo apt install docker-compose
+sudo apt install jq
 
-`npm run codegen`
+curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
+sudo apt-get install -y nodejs
+npm install -g @graphprotocol/graph-cli@0.26.0
 
-## Build
+git clone https://github.com/graphprotocol/graph-node/
+cd graph-node/docker
+vi docker-compose.yml
+# edit ethereum: 'mainnet:YOUR_RPC'
+./setup.sh
+docker-compose up -d
 
-`npm run build`
-
-## Deploy
-
-`npm run deploy`
-
-or
-
-`npm run create-local`
-
-`npm run deploy-local`
+cd ~
+git clone https://github.com/leon-do/tokenQL.git
+cd tokenQL
+npm install
+vi subgraph.yaml
+npm run codegen
+npm run build
+npm run create-local
+npm run deploy-local
+```
