@@ -19,7 +19,7 @@ vi docker-compose.yml
 docker-compose up -d
 
 cd ~
-git clone https://github.com/leon-do/tokenQL.git
+git clone https://github.com/leon-do/tokenQL20.git
 cd tokenQL
 npm install
 vi subgraph.yaml
