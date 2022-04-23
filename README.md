@@ -12,3 +12,4 @@
 
 ## Deploy
 
+`yarn deploy`
