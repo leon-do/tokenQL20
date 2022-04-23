@@ -5,9 +5,9 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ tokenql-20",
-    "create-local": "graph create --node http://localhost:8020/ tokenql-20",
-    "remove-local": "graph remove --node http://localhost:8020/ tokenql-20",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 tokenQL-20"
+    "create-local": "graph create --node http://localhost:8020/ tokenql",
+    "remove-local": "graph remove --node http://localhost:8020/ tokenql",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 tokenql"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.26.0",
