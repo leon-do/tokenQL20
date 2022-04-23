@@ -12,4 +12,6 @@
 
 ## Deploy
 
+`yarn create-local`
+
 `yarn deploy`
