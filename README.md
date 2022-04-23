@@ -31,3 +31,21 @@ npm run deploy-local
 :8030/graphql/playground
 :8000/subgraphs/name/generated/sample/graphql
 ```
+
+## Playground Query
+
+```graphql
+{
+  indexingStatuses {
+    synced
+    chains {
+      chainHeadBlock {
+        number
+      }
+      latestBlock {
+        number
+      }
+    }
+  }
+}
+```
