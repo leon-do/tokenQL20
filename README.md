@@ -1,17 +1,21 @@
 # TokenQL
 
-`yarn install`
+`npm install`
 
 ## Generate Code
 
-`yarn codegen`
+`npm run codegen`
 
 ## Build
 
-`yarn build`
+`npm run build`
 
 ## Deploy
 
-`yarn create-local`
+`npm run deploy`
 
-`yarn deploy`
+or
+
+`npm run create-local`
+
+`npm run deploy-local`
