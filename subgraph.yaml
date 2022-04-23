@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: ERC20
-    network: rinkeby
+    network: mainnet
     source:
       # address: "0xb3185d74C35F071aE5B7f57B29e9Acf3bD6a2AD1"
       abi: ERC20
