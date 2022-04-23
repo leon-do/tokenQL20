@@ -1,57 +1,44 @@
-import { BigInt } from "@graphprotocol/graph-ts"
-import { ERC20, Approval, Transfer } from "../generated/ERC20/ERC20"
-import { ExampleEntity } from "../generated/schema"
+import { Address } from "@graphprotocol/graph-ts";
+import { ERC20, Transfer, Approval } from "../generated/ERC20/ERC20";
+import { TokenEntity, ApprovalEntity } from "../generated/schema";
 
-export function handleApproval(event: Approval): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
-
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (!entity) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
-  }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
-  entity.owner = event.params.owner
-  entity.spender = event.params.spender
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.allowance(...)
-  // - contract.approve(...)
-  // - contract.balanceOf(...)
-  // - contract.decimals(...)
-  // - contract.decreaseAllowance(...)
-  // - contract.increaseAllowance(...)
-  // - contract.name(...)
-  // - contract.symbol(...)
-  // - contract.totalSupply(...)
-  // - contract.transfer(...)
-  // - contract.transferFrom(...)
+export function handleTransfer(event: Transfer): void {
+  saveToken(event.address, event.params.from);
+  saveToken(event.address, event.params.to);
 }
 
-export function handleTransfer(event: Transfer): void {}
+export function handleApproval(event: Approval): void {
+  let id = event.address.toHex() + "/" + event.params.owner.toHex() + "/" + event.params.spender.toHex();
+  let entity = ApprovalEntity.load(id);
+  if (!entity) {
+    entity = new ApprovalEntity(id);
+    entity.contract = event.address;
+  }
+  entity.owner = event.params.owner;
+  entity.spender = event.params.spender;
+  entity.value = event.params.value;
+  entity.save();
+}
+
+function saveToken(contractAddress: Address, owner: Address): void {
+  let erc20 = ERC20.bind(contractAddress);
+  let id = contractAddress.toHex() + "/" + owner.toHex();
+  let entity = TokenEntity.load(id);
+  if (!entity) {
+    entity = new TokenEntity(id);
+    entity.owner = owner;
+    let contract = contractAddress;
+    entity.contract = contract;
+    let name = erc20.try_name();
+    entity.name = name.reverted ? null : name.value;
+    let symbol = erc20.try_symbol();
+    entity.symbol = symbol.reverted ? null : symbol.value;
+    let decimals = erc20.try_decimals();
+    entity.decimals = decimals.reverted ? 18 : decimals.value;
+  }
+  let balance = erc20.try_balanceOf(owner);
+  entity.balance = balance.reverted ? null : balance.value;
+  let totalSupply = erc20.try_totalSupply();
+  entity.totalSupply = totalSupply.reverted ? null : totalSupply.value;
+  entity.save();
+}
