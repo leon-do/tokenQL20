@@ -27,4 +27,7 @@ npm run codegen
 npm run build
 npm run create-local
 npm run deploy-local
+
+:8030/graphql/playground
+:8000/subgraphs/name/generated/sample/graphql
 ```
